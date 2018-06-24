@@ -1,4 +1,4 @@
-package RecipePuppy;
+package recipePuppy;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -12,7 +12,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * Connects to RecipePuppy API and standardizes information in Recipe object
+ * Connects to recipePuppy API and standardizes information in Recipe object
  *
  * @author Pierce Kelaita
  * @since 6-23-2018
@@ -44,8 +44,10 @@ public class Access {
 
         Gson g = new Gson();
 
-        // connect to RecipePuppy API
-        URL url = new URL("http://www.recipepuppy.com/api");
+        // connect to recipePuppy API
+        URL url = new URL(
+                "http://www.recipepuppy.com/api"
+        );
         URLConnection request = url.openConnection();
         request.connect();
 

@@ -1,11 +1,11 @@
-package RecipePuppy;
+package recipePuppy;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Stores information about a single recipe from RecipePuppy API
+ * Stores information about a single recipe from recipePuppy API
  *
  * @author Pierce Kelaita
  * @since 6-23-2018
