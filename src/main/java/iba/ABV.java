@@ -6,8 +6,21 @@ import com.google.gson.JsonObject;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
+/**
+ * Finds alcohol percentages (ABV) of various ingredients, as defined by IBA.
+ *
+ * @author Pierce Kelaita
+ * @since 6-24-2018
+ */
 class ABV {
 
+    /**
+     * Queries <a href="../../resources/recipes.json">resources/ingredients_strength
+     * .json</a> for the ABV of a single ingredient.
+     *
+     * @param ing Ingredient to query
+     * @return ABV strenth of ingredient, or {@code 0.0} if not found in JSON document.
+     */
     static Double getABV(String ing) {
 
         // TODO migrate to mongoDB
@@ -25,6 +38,6 @@ class ABV {
         } catch (NullPointerException npe) {
             return 0.0;
         }
-        return null; // should never run
+        return null; // should never return this
     }
 }

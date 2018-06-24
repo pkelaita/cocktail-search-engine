@@ -46,7 +46,8 @@ public class RecipeDeserializer {
 
         // connect to recipePuppy API
         URL url = new URL(
-                "http://www.recipepuppy.com/api"
+                "http://www.recipepuppy.com/api?" +
+                        "q=ginger"
         );
         URLConnection request = url.openConnection();
         request.connect();

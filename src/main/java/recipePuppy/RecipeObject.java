@@ -17,8 +17,7 @@ public class RecipeObject {
     private List<String> ingredients;
 
     /**
-     * Inner class accessed by GSON in order to deserialize JSON data into Java objects.
-     * Takes in all fields as Strings.
+     * Builder class acessed by GSON to populate data fields.
      */
     @SuppressWarnings("unused")
     class RecipeBuilder {
@@ -28,8 +27,10 @@ public class RecipeObject {
         private String thumbnail;
 
         /**
-         * @return A RecipeObject object containing the deserialized data, with the ingredients
-         * stored as a List rather than a String.
+         * Converts this builder to RecipeOjbect.
+         *
+         * @return RecipeObject containing the deserialized data, with the
+         * ingredients stored as a List rather than a String.
          */
         RecipeObject getRecipeObject() {
             RecipeObject result = new RecipeObject();
@@ -46,7 +47,7 @@ public class RecipeObject {
     }
 
     /**
-     * @return Deserialized recipe data formatted as a String
+     * @return String-formatted recipe
      */
     @Override
     public String toString() {

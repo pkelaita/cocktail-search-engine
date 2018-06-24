@@ -3,6 +3,12 @@ package iba;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Stores information about a single IBA cocktail.
+ *
+ * @author Pierce Kelaita
+ * @since 6-24-2018
+ */
 @SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection"})
 public class IBAObject {
     private String name;
@@ -10,17 +16,29 @@ public class IBAObject {
     private Map<String, Double> ingredients;
     private double abv;
 
+    /**
+     * Builder class accessed by GSON to populate data fields.
+     */
     @SuppressWarnings("ConstantConditions")
     class IBABuilder {
         String name;
         IngredientBuilder[] ingredients;
         String type;
 
+        /**
+         * Accessed by GSON to populate ingredient information.
+         */
         class IngredientBuilder {
             String name;
             Double quantity;
         }
 
+        /**
+         * Converts this builder to IBAObject
+         *
+         * @return IBAObject containing the deserialized data, with ingredients stored in
+         * a HashMap. Also includes relative alcohol percentages.
+         */
         IBAObject getIBAObject() {
             IBAObject result = new IBAObject();
             result.name = this.name;
@@ -42,6 +60,9 @@ public class IBAObject {
         }
     }
 
+    /**
+     * @return String-formatted cocktail information
+     */
     @Override
     public String toString() {
         StringBuilder out = new StringBuilder(name + ":" +
