@@ -12,7 +12,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * Connects to recipePuppy API and standardizes information in RecipeObject object
+ * Connects to recipePuppy API and accesses information about cocktail recipes.
  *
  * @author Pierce Kelaita
  * @since 6-23-2018
@@ -20,34 +20,22 @@ import java.net.URLConnection;
 public class RecipeDeserializer {
 
     /**
-     * Testing method
-     *
-     * @param args Command-line arguments
-     */
-    public static void main(String[] args) {
-        try {
-            RecipeObject[] arr = new RecipeDeserializer().getResults();
-            for (RecipeObject r : arr)
-                System.out.println(r);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Searches for recipes matching given parameters
      *
-     * @return Results of a search
+     * @param query Search parameter
+     * @param page Page number from which to show results
+     * @return Results of the search
      * @throws IOException Typically due to malformed JSON
      */
-    private RecipeObject[] getResults() throws IOException {
+    private RecipeObject[] getResults(String query, int page) throws IOException {
 
         Gson g = new Gson();
 
         // connect to recipePuppy API
         URL url = new URL(
                 "http://www.recipepuppy.com/api?" +
-                        "q=ginger"
+                        "q=" + query.toLowerCase().replace(" ", "_") + "&" +
+                        "p=" + page
         );
         URLConnection request = url.openConnection();
         request.connect();
@@ -68,5 +56,23 @@ public class RecipeDeserializer {
             result[i] = rb.getRecipeObject();
         }
         return result;
+    }
+
+    /**
+     * Testing method
+     *
+     * @param args Command-line arguments
+     */
+    public static void main(String[] args) {
+        String q = "";
+        try {
+            for (int p = 1; p <= 1; p++) {
+                RecipeObject[] arr = new RecipeDeserializer().getResults(q, p);
+                for (RecipeObject r : arr)
+                    System.out.println(r);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
