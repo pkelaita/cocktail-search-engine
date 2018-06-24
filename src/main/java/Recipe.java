@@ -2,55 +2,55 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Stores information about a single recipe from RecipePuppy API
+ *
+ * @author Pierce Kelaita
+ * @since 6-23-2018
+ */
 public class Recipe {
     private String title;
     private String href;
     private String thumbnail;
     private List<String> ingredients;
 
-    public Recipe(String title, String href, String ingredients, String thumbnail) {
-        this.title = title;
-        this.href = href;
-        this.thumbnail = thumbnail;
-        this.ingredients = new ArrayList<>(
-                Arrays.asList(
-                        ingredients.split(" ,")
-                )
-        );
-    }
-
-    @Override
-    public String toString() {
-        return title + ":\n\t" +
-                href + "\n\t" +
-                thumbnail + "\n\t" +
-                ingredients + "\n";
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getHref() {
-        return href;
-    }
-
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public List<String> getIngredients() {
-        return ingredients;
-    }
-
+    /**
+     * Inner class accessed by GSON in order to deserialize JSON data into Java objects.
+     * Takes in all fields as Strings.
+     */
+    @SuppressWarnings("unused")
     class RecipeBuilder {
         private String title;
         private String href;
         private String ingredients;
         private String thumbnail;
 
-        public Recipe getRecipe(){
-            return new Recipe(title, href, ingredients, thumbnail);
+        /**
+         * @return A Recipe object containing the deserialized data, with the ingredients
+         * stored as a List rather than a String.
+         */
+        Recipe getRecipe() {
+            Recipe result = new Recipe();
+            result.title = title;
+            result.href = href;
+            result.thumbnail = thumbnail;
+            result.ingredients = new ArrayList<>(
+                    Arrays.asList(
+                            ingredients.split(", +")
+                    )
+            );
+            return result;
         }
+    }
+
+    /**
+     * @return Deserialized recipe data formatted as a String
+     */
+    @Override
+    public String toString() {
+        return title + ":\n\t" +
+                href + "\n\t" +
+                thumbnail + "\n\t" +
+                ingredients + "\n";
     }
 }
