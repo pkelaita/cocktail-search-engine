@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @author Pierce Kelaita
  * @since 6-23-2018
  */
-public class Recipe {
+public class RecipeObject {
     private String title;
     private String href;
     private String thumbnail;
@@ -28,11 +28,11 @@ public class Recipe {
         private String thumbnail;
 
         /**
-         * @return A Recipe object containing the deserialized data, with the ingredients
+         * @return A RecipeObject object containing the deserialized data, with the ingredients
          * stored as a List rather than a String.
          */
-        Recipe getRecipe() {
-            Recipe result = new Recipe();
+        RecipeObject getRecipeObject() {
+            RecipeObject result = new RecipeObject();
             result.title = title;
             result.href = href;
             result.thumbnail = thumbnail;

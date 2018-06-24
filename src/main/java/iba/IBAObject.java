@@ -11,7 +11,7 @@ public class IBAObject {
     private double abv;
 
     @SuppressWarnings("ConstantConditions")
-    class IBAObjectBuilder {
+    class IBABuilder {
         String name;
         IngredientBuilder[] ingredients;
         String type;
@@ -29,12 +29,12 @@ public class IBAObject {
             // Calculate alcohol percentage
             double tQuant = 0, tABV = 0;
             result.ingredients = new HashMap<>();
-            for (IngredientBuilder i : this.ingredients) {
-                if (i.quantity == null) // don't add garnish quantities
-                    i.quantity = 0.0;
-                result.ingredients.put(i.name, i.quantity);
-                tQuant += i.quantity;
-                tABV += ABV.getABV(i.name) * i.quantity;
+            for (IngredientBuilder ib : this.ingredients) {
+                if (ib.quantity == null) // don't add garnish quantities
+                    ib.quantity = 0.0;
+                result.ingredients.put(ib.name, ib.quantity);
+                tQuant += ib.quantity;
+                tABV += ABV.getABV(ib.name) * ib.quantity;
             }
             result.abv = Math.round((tABV / tQuant) * 1e4) / 1e2;
 

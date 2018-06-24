@@ -12,12 +12,12 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * Connects to recipePuppy API and standardizes information in Recipe object
+ * Connects to recipePuppy API and standardizes information in RecipeObject object
  *
  * @author Pierce Kelaita
  * @since 6-23-2018
  */
-public class Access {
+public class RecipeDeserializer {
 
     /**
      * Testing method
@@ -26,8 +26,8 @@ public class Access {
      */
     public static void main(String[] args) {
         try {
-            Recipe[] arr = new Access().getResults();
-            for (Recipe r : arr)
+            RecipeObject[] arr = new RecipeDeserializer().getResults();
+            for (RecipeObject r : arr)
                 System.out.println(r);
         } catch (IOException e) {
             e.printStackTrace();
@@ -40,7 +40,7 @@ public class Access {
      * @return Results of a search
      * @throws IOException Typically due to malformed JSON
      */
-    private Recipe[] getResults() throws IOException {
+    private RecipeObject[] getResults() throws IOException {
 
         Gson g = new Gson();
 
@@ -58,13 +58,13 @@ public class Access {
         JsonArray results = root.getAsJsonObject().getAsJsonArray("results");
 
         // standardize JSON objects
-        Recipe[] result = new Recipe[results.size()];
+        RecipeObject[] result = new RecipeObject[results.size()];
         for (int i = 0; i < results.size(); i++) {
-            Recipe.RecipeBuilder rb = g.fromJson(
+            RecipeObject.RecipeBuilder rb = g.fromJson(
                     results.get(i).toString(),
-                    Recipe.RecipeBuilder.class
+                    RecipeObject.RecipeBuilder.class
             );
-            result[i] = rb.getRecipe();
+            result[i] = rb.getRecipeObject();
         }
         return result;
     }

@@ -6,13 +6,9 @@ import com.google.gson.JsonObject;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
-public class ABV {
+class ABV {
 
-    public static void main (String[] args) {
-        System.out.println(ABV.getABV("gin"));
-    }
-
-    public static Double getABV(String ing) {
+    static Double getABV(String ing) {
 
         // TODO migrate to mongoDB
 
