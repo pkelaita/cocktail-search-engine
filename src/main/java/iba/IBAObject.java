@@ -12,8 +12,11 @@ import java.util.Map;
 @SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection"})
 public class IBAObject {
     private String name;
-    private String type;
+    private String glass;
+    private String category;
     private Map<String, Double> ingredients;
+    private String garnish;
+    private String preparation;
     private double abv;
 
     /**
@@ -22,15 +25,21 @@ public class IBAObject {
     @SuppressWarnings("ConstantConditions")
     class IBABuilder {
         String name;
+        String glass;
+        String category;
         IngredientBuilder[] ingredients;
-        String type;
+        String garnish;
+        String preparation;
 
         /**
          * Accessed by GSON to populate ingredient information.
          */
         class IngredientBuilder {
-            String name;
-            Double quantity;
+            String unit;
+            Double amount;
+            String ingredient;
+            String label;
+            String special;
         }
 
         /**
@@ -42,19 +51,32 @@ public class IBAObject {
         IBAObject getIBAObject() {
             IBAObject result = new IBAObject();
             result.name = this.name;
-            result.type = this.type;
+            result.glass = this.glass; // name, glass are never null
+            result.category = this.category != null ? this.category : "None";
+            result.garnish = this.garnish != null ? this.garnish : "None";
+            result.preparation = this.preparation != null ? this.preparation : "None";
 
-            // Calculate alcohol percentage
+            // populate ingredients and ABV
             double tQuant = 0, tABV = 0;
             result.ingredients = new HashMap<>();
             for (IngredientBuilder ib : this.ingredients) {
-                if (ib.quantity == null) // don't add garnish quantities
-                    ib.quantity = 0.0;
-                result.ingredients.put(ib.name, ib.quantity);
-                tQuant += ib.quantity;
-                tABV += ABV.getABV(ib.name) * ib.quantity;
+
+                // add special ingredients
+                if (ib.amount == null)
+                    ib.amount = 0.0;
+                if (ib.ingredient == null)
+                    ib.ingredient = ib.special;
+
+                // calculate ABV
+                tQuant += ib.amount;
+                tABV += ABV.getABV(ib.ingredient) * ib.amount;
+
+                // add all ingredients
+                if (ib.label != null)
+                    ib.ingredient = ib.label;
+                result.ingredients.put(ib.ingredient, ib.amount);
             }
-            result.abv = Math.round((tABV / tQuant) * 1e4) / 1e2;
+            result.abv = Math.round((tABV / tQuant) * 1e3) / 1e3;
 
             return result;
         }
@@ -66,11 +88,44 @@ public class IBAObject {
     @Override
     public String toString() {
         StringBuilder out = new StringBuilder(name + ":" +
-                "\n\t" + "Type: " + type +
                 "\n\t" + "ABV: " + abv +
+                "\n\t" + "Glass: " + glass +
+                "\n\t" + "Category: " + category +
                 "\n\t" + "Ingredients: ");
         for (String i : ingredients.keySet())
             out.append("\n\t\t").append(i).append(" : ").append(ingredients.get(i));
+        out.append("\n\t" + "Garnish: ").append(garnish)
+                .append("\n\t").append("Preparation: ").append(preparation);
         return out.toString();
+    }
+
+    /// Getters ///
+
+    public String getName() {
+        return name;
+    }
+
+    public String getGlass() {
+        return glass;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public Map<String, Double> getIngredients() {
+        return ingredients;
+    }
+
+    public String getGarnish() {
+        return garnish;
+    }
+
+    public String getPreparation() {
+        return preparation;
+    }
+
+    public double getAbv() {
+        return abv;
     }
 }

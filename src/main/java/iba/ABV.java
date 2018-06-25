@@ -1,7 +1,7 @@
 package iba;
 
-import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,8 +15,8 @@ import java.io.FileReader;
 class ABV {
 
     /**
-     * Queries <a href="../../resources/recipes.json">resources/ingredients_strength
-     * .json</a> for the ABV of a single ingredient.
+     * Queries <a href="../../resources/ingredients.json">resources/ingredients.json</a>
+     * for the ABV of a single ingredient.
      *
      * @param ing Ingredient to query
      * @return ABV strenth of ingredient, or {@code 0.0} if not found in JSON document.
@@ -27,10 +27,11 @@ class ABV {
 
         try {
             FileReader reader = new FileReader(
-                    "src/main/resources/ingredients_strength.json");
+                    "src/main/resources/ingredients.json");
             JsonParser parser = new JsonParser();
             JsonObject jobj = (JsonObject) parser.parse(reader);
-            return jobj.get(ing).getAsDouble();
+
+            return jobj.get(ing).getAsJsonObject().get("abv").getAsDouble();
 
         } catch (FileNotFoundException fne) {
             fne.printStackTrace();

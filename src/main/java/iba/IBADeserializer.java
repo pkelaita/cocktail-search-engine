@@ -4,12 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Stores information about all listed IBA cocktails.
+ * Stores information about all listed IBA contents.
  *
  * @author Pierce Kelaita
  * @see <a href="https://en.wikipedia.org/wiki/List_of_IBA_official_cocktails"> List of
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public class IBADeserializer {
 
-    private List<IBAObject> cocktails;
+    private List<IBAObject> contents;
 
     // TODO migrate to MongoDB
 
@@ -28,7 +29,7 @@ public class IBADeserializer {
      *
      * @throws FileNotFoundException Should never be thrown
      */
-    private IBADeserializer() throws FileNotFoundException {
+    public IBADeserializer() throws FileNotFoundException {
         JsonParser jp = new JsonParser();
         JsonElement root = jp.parse(
                 new FileReader("src/main/resources/recipes.json")
@@ -38,10 +39,17 @@ public class IBADeserializer {
         IBAObject.IBABuilder[] ibaArr = g.fromJson(
                 root, IBAObject.IBABuilder[].class
         );
-        cocktails = new ArrayList<>();
+        contents = new ArrayList<>();
         for (IBAObject.IBABuilder iob : ibaArr) {
-            cocktails.add(iob.getIBAObject());
+            contents.add(iob.getIBAObject());
         }
+    }
+
+    /**
+     * @return Deserialized list of IBA cocktails.
+     */
+    public List<IBAObject> getContents() {
+        return contents;
     }
 
     /**
@@ -52,7 +60,7 @@ public class IBADeserializer {
      */
     public static void main(String[] args) throws FileNotFoundException {
         IBADeserializer a = new IBADeserializer();
-        for (IBAObject i : a.cocktails)
+        for (IBAObject i : a.contents)
             System.out.println(i + "\n");
     }
 }

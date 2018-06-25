@@ -12,7 +12,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * Connects to recipePuppy API and accesses information about cocktail recipes.
+ * Connects to recipePuppy API and accesses information about recipes.
  *
  * @author Pierce Kelaita
  * @since 6-23-2018
@@ -22,21 +22,18 @@ public class RecipeDeserializer {
     /**
      * Searches for recipes matching given parameters
      *
-     * @param query Search parameter
-     * @param page Page number from which to show results
+     * @param ingredients Array containging a recipe's ingredients
+     * @param query       Search parameter
      * @return Results of the search
      * @throws IOException Typically due to malformed JSON
      */
-    private RecipeObject[] getResults(String query, int page) throws IOException {
+    public RecipeObject[] getResults(String[] ingredients, String query)
+            throws IOException {
 
         Gson g = new Gson();
 
         // connect to recipePuppy API
-        URL url = new URL(
-                "http://www.recipepuppy.com/api?" +
-                        "q=" + query.toLowerCase().replace(" ", "_") + "&" +
-                        "p=" + page
-        );
+        URL url = new URL(getURL(ingredients, query));
         URLConnection request = url.openConnection();
         request.connect();
 
@@ -59,18 +56,35 @@ public class RecipeDeserializer {
     }
 
     /**
+     * Generates RecipePuppy API URL from given parameters
+     *
+     * @param ingredients Array containging a recipe's ingredients
+     * @param query       Search parameter
+     * @return Formatted URL
+     */
+    public String getURL(String[] ingredients, String query) {
+        StringBuilder ingredientsQuery = new StringBuilder();
+        for (String i : ingredients)
+            ingredientsQuery.append(
+                    i.toLowerCase().replace(" ", "_")
+            ).append(",");
+        return "http://www.recipepuppy.com/api?" +
+              //  "i=" + ingredientsQuery.toString() + "&" +
+                "q=" + query.toLowerCase().replace(" ", "_");
+    }
+
+    /**
      * Testing method
      *
      * @param args Command-line arguments
      */
     public static void main(String[] args) {
         String q = "";
+        String[] i = {"dry vermouth"};
         try {
-            for (int p = 1; p <= 1; p++) {
-                RecipeObject[] arr = new RecipeDeserializer().getResults(q, p);
-                for (RecipeObject r : arr)
-                    System.out.println(r);
-            }
+            RecipeObject[] arr = new RecipeDeserializer().getResults(i, q);
+            for (RecipeObject r : arr)
+                System.out.println(r);
         } catch (IOException e) {
             e.printStackTrace();
         }
