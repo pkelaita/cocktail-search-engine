@@ -7,17 +7,34 @@ import recipePuppy.RecipeObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
+/**
+ * Connects the user with a suggested alternate recipes based on the RecipePuppy API for
+ * many of the IBA cocktails.
+ *
+ * @author Pierce Kelaita
+ * @see <a href="http://www.recipepuppy.com/about/api/">RecipePuppy API</a>
+ * @since 6-24-2018
+ */
 public class RecipeSearchEngine {
 
     private RecipeDeserializer recipeDeserializer;
 
+    /**
+     * Initializes RecipeSearchEngine with a recipeDeserializer
+     */
     public RecipeSearchEngine() {
         recipeDeserializer = new RecipeDeserializer();
     }
 
+    /**
+     * Finds the most relevant result for a given IBA cocktail
+     *
+     * @param iba Contains data about an IBA cocktail
+     * @return The most relevant result, or an empty RecipeObject if no results were
+     * found.
+     */
     public RecipeObject search(IBAObject iba) {
 
         Set<String> keys = iba.getIngredients().keySet();
@@ -40,7 +57,7 @@ public class RecipeSearchEngine {
      * @param args Command-line arguments
      */
     public static void main(String[] args) throws FileNotFoundException {
-        List<IBAObject> query = new IBADeserializer().getContents();
+        Set<IBAObject> query = new IBADeserializer().getContents();
         RecipeSearchEngine rse = new RecipeSearchEngine();
 
         for (IBAObject q : query) {

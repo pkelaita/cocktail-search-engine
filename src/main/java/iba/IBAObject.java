@@ -10,7 +10,7 @@ import java.util.Map;
  * @since 6-24-2018
  */
 @SuppressWarnings({"unused", "MismatchedQueryAndUpdateOfCollection"})
-public class IBAObject {
+public class IBAObject implements Comparable<IBAObject> {
     private String name;
     private String glass;
     private String category;
@@ -83,19 +83,35 @@ public class IBAObject {
     }
 
     /**
+     * Sorts alphabetically
+     *
+     * @param other Other IBAObject
+     * @return Result of comparison
+     */
+    @Override
+    public int compareTo(IBAObject other) {
+        return this.name.compareTo(other.name);
+    }
+
+    /**
      * @return String-formatted cocktail information
      */
     @Override
     public String toString() {
         StringBuilder out = new StringBuilder(name + ":" +
-                "\n\t" + "ABV: " + abv +
+                "\n\t" + "ABV: " + abv + " %" +
                 "\n\t" + "Glass: " + glass +
                 "\n\t" + "Category: " + category +
                 "\n\t" + "Ingredients: ");
         for (String i : ingredients.keySet())
-            out.append("\n\t\t").append(i).append(" : ").append(ingredients.get(i));
-        out.append("\n\t" + "Garnish: ").append(garnish)
-                .append("\n\t").append("Preparation: ").append(preparation);
+            out.append("\n\t\t")
+                    .append(i).append(" : ")
+                    .append(ingredients.get(i))
+                    .append(" cl");
+        out.append(new StringBuilder(
+                "\n\t" + "Garnish: " + garnish +
+                        "\n\t" + "Preparation: " + preparation
+        ));
         return out.toString();
     }
 

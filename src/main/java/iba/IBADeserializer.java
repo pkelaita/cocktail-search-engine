@@ -4,10 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Stores information about all listed IBA contents.
@@ -19,7 +18,7 @@ import java.util.List;
  */
 public class IBADeserializer {
 
-    private List<IBAObject> contents;
+    private Set<IBAObject> contents;
 
     // TODO migrate to MongoDB
 
@@ -39,7 +38,7 @@ public class IBADeserializer {
         IBAObject.IBABuilder[] ibaArr = g.fromJson(
                 root, IBAObject.IBABuilder[].class
         );
-        contents = new ArrayList<>();
+        contents = new TreeSet<>();
         for (IBAObject.IBABuilder iob : ibaArr) {
             contents.add(iob.getIBAObject());
         }
@@ -48,7 +47,7 @@ public class IBADeserializer {
     /**
      * @return Deserialized list of IBA cocktails.
      */
-    public List<IBAObject> getContents() {
+    public Set<IBAObject> getContents() {
         return contents;
     }
 
@@ -58,7 +57,7 @@ public class IBADeserializer {
      * @param args Command-line arguments
      * @throws FileNotFoundException Should never be thrown
      */
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException, IOException {
         IBADeserializer a = new IBADeserializer();
         for (IBAObject i : a.contents)
             System.out.println(i + "\n");

@@ -15,6 +15,7 @@ import java.net.URLConnection;
  * Connects to recipePuppy API and accesses information about recipes.
  *
  * @author Pierce Kelaita
+ * @see <a href="http://www.recipepuppy.com/about/api/">RecipePuppy API</a>
  * @since 6-23-2018
  */
 public class RecipeDeserializer {
@@ -69,7 +70,7 @@ public class RecipeDeserializer {
                     i.toLowerCase().replace(" ", "_")
             ).append(",");
         return "http://www.recipepuppy.com/api?" +
-              //  "i=" + ingredientsQuery.toString() + "&" +
+                //  "i=" + ingredientsQuery.toString() + "&" +
                 "q=" + query.toLowerCase().replace(" ", "_");
     }
 
