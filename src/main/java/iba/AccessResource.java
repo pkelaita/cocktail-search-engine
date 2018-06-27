@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 /**
- * Finds alcohol percentages (AccessResource) of various ingredients, as defined by IBA.
+ * Finds alcohol percentages (ABV) of various ingredients, as defined by IBA.
  *
  * @author Pierce Kelaita
  * @since 6-24-2018
