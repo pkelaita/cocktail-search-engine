@@ -39,8 +39,8 @@ public class IBADeserializer {
                 root, IBAObject.IBABuilder[].class
         );
         contents = new TreeSet<>();
-        for (IBAObject.IBABuilder iob : ibaArr) {
-            contents.add(iob.getIBAObject());
+        for (IBAObject.IBABuilder builder : ibaArr) {
+            contents.add(builder.getIBAObject());
         }
     }
 

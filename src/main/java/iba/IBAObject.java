@@ -14,10 +14,14 @@ public class IBAObject implements Comparable<IBAObject> {
     private String name;
     private String glass;
     private String category;
-    private Map<String, Double> ingredients;
     private String garnish;
     private String preparation;
+    private Map<String, Double> ingredients;
+    // Non-Json fields
     private double abv;
+    private String mainAlc;
+    private String taste;
+
 
     /**
      * Builder class accessed by GSON to populate data fields.
@@ -56,27 +60,41 @@ public class IBAObject implements Comparable<IBAObject> {
             result.garnish = this.garnish != null ? this.garnish : "None";
             result.preparation = this.preparation != null ? this.preparation : "None";
 
-            // populate ingredients and ABV
-            double tQuant = 0, tABV = 0;
+            // populate ingredients
+            double tQuant = 0, tABV = 0, maxAlc = 0, maxCL = 0;
+            String mainAlc = "###", // should never display
+                    maxTaste = "neutral";
             result.ingredients = new HashMap<>();
             for (IngredientBuilder ib : this.ingredients) {
-
-                // add special ingredients
                 if (ib.amount == null)
                     ib.amount = 0.0;
                 if (ib.ingredient == null)
                     ib.ingredient = ib.special;
 
-                // calculate ABV
+                // calculate non-JSON values
+                double iABV = AccessResource.getABV(ib.ingredient);
+                if (iABV > 0 && ib.amount > maxAlc) {
+                    maxAlc = ib.amount;
+                    mainAlc = ib.ingredient;
+                }
+                String flavor = AccessResource.getTaste(ib.ingredient);
+                if (flavor != null && ib.amount > maxCL) {
+                    maxCL = ib.amount;
+                    maxTaste = flavor;
+                }
                 tQuant += ib.amount;
-                tABV += ABV.getABV(ib.ingredient) * ib.amount;
+                tABV += iABV * ib.amount;
 
-                // add all ingredients
+                // update labeled ingredients
                 if (ib.label != null)
                     ib.ingredient = ib.label;
                 result.ingredients.put(ib.ingredient, ib.amount);
             }
-            result.abv = Math.round((tABV / tQuant) * 1e3) / 1e3;
+
+            // populate non-JSON fields
+            result.abv = Math.round((tABV / tQuant) * 1e2) / 1e2;
+            result.mainAlc = mainAlc;
+            result.taste = maxTaste;
 
             return result;
         }
@@ -100,6 +118,8 @@ public class IBAObject implements Comparable<IBAObject> {
     public String toString() {
         StringBuilder out = new StringBuilder(name + ":" +
                 "\n\t" + "ABV: " + abv + " %" +
+                "\n\t" + "Main Alcohol: " + mainAlc +
+                "\n\t" + "Taste: " + taste +
                 "\n\t" + "Glass: " + glass +
                 "\n\t" + "Category: " + category +
                 "\n\t" + "Ingredients: ");
@@ -107,7 +127,7 @@ public class IBAObject implements Comparable<IBAObject> {
             out.append("\n\t\t")
                     .append(i).append(" : ")
                     .append(ingredients.get(i))
-                    .append(" cl");
+                    .append(" parts");
         out.append(new StringBuilder(
                 "\n\t" + "Garnish: " + garnish +
                         "\n\t" + "Preparation: " + preparation
@@ -143,5 +163,13 @@ public class IBAObject implements Comparable<IBAObject> {
 
     public double getAbv() {
         return abv;
+    }
+
+    public String getMainAlc() {
+        return mainAlc;
+    }
+
+    public String getTaste() {
+        return taste;
     }
 }
